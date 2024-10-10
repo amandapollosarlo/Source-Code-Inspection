@@ -26,6 +26,13 @@ public class TicketMachine {
     }
     this.saldo += valor;
 }
+    public void emitirBilhete() {
+    if (saldo < precoDoBilhete) { // Linha 16
+        throw new IllegalStateException("Saldo insuficiente para emitir o bilhete.");
+    }
+    saldo -= precoDoBilhete;
+    System.out.println("Bilhete emitido. Saldo restante: " + saldo);
+}
 
     public int getSaldo() {
         return saldo;
@@ -39,6 +46,7 @@ public class TicketMachine {
         if (saldo < valor) {
             throw new SaldoInsuficienteException();
         }
+        
         String result = "*****************\n";
         result += "*** R$ " + saldo + ",00 ****\n";
         result += "*****************\n";
