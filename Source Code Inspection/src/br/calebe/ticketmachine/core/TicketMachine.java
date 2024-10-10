@@ -20,9 +20,8 @@ public class TicketMachine {
     }
 
    public void inserir(int valor) throws PapelMoedaInvalidaException {
-    if (valor != 2 && valor != 5 && valor != 10 && valor != 20 && valor != 50 && valor != 100) {
-        throw new PapelMoedaInvalidaException("Nota inválida inserida.");
-
+    if (valor != 2 && valor != 5 && valor != 10 && valor != 20 && valor != 50 && valor != 100) { // Linha 9
+        throw new IllegalArgumentException("Valor inserido não é uma nota válida.");
     }
     this.saldo += valor;
 }
