@@ -3,9 +3,9 @@ name: CI
 # Define os gatilhos para o workflow
 on:
   push:
-    branches: [ master ]        # Executa em push para a branch master
+    branches: [ master ]       
   pull_request:
-    branches: [ master ]        # Executa em pull requests para a branch master
+    branches: [ master ]        
 
 jobs:
   build:
@@ -22,6 +22,15 @@ jobs:
         distribution: 'temurin'   # Distribuição do JDK
         java-version: '17'        # Versão do Java
 
+    - name: Check Java version
+      run: java -version
+
+    - name: Check Maven version
+      run: mvn -version
+
+    - name: List project files
+      run: ls -R
+
     - name: Cache Maven packages
       uses: actions/cache@v3
       with:
@@ -31,7 +40,16 @@ jobs:
           ${{ runner.os }}-maven-  # Chaves de restauração
 
     - name: Build with Maven
-      run: mvn clean install -DskipTests  # Compila o projeto sem executar os testes
+      run: mvn clean install -X -DskipTests  # Compila o projeto com logs detalhados e sem executar os testes
 
     - name: Run tests
       run: mvn test                        # Executa os testes
+
+    - name: Display Test Results
+      run: |
+        if [ -d "target/surefire-reports" ]; then
+          echo "Test Results:"
+          cat target/surefire-reports/*.txt
+        else
+          echo "No test reports found."
+        fi
