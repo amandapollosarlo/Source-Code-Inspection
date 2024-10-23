@@ -1,6 +1,0 @@
-com\ticketmachine\PapelMoedaInvalidaException.class
-com\ticketmachine\TicketMachine.class
-com\ticketmachine\Troco.class
-com\ticketmachine\PapelMoeda.class
-com\ticketmachine\SaldoInsuficienteException.class
-com\ticketmachine\Troco$TrocoIterator.class
