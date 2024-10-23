@@ -3,9 +3,9 @@ name: CI
 # Define os gatilhos para o workflow
 on:
   push:
-    branches: [ main ]        # Executa em push para a branch main
+    branches: [ master ]        # Executa em push para a branch master
   pull_request:
-    branches: [ main ]        # Executa em pull requests para a branch main
+    branches: [ master ]        # Executa em pull requests para a branch master
 
 jobs:
   build:
