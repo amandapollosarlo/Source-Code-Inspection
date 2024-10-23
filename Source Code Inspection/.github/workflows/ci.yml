@@ -1,0 +1,37 @@
+name: CI
+
+# Define os gatilhos para o workflow
+on:
+  push:
+    branches: [ main ]        # Executa em push para a branch main
+  pull_request:
+    branches: [ main ]        # Executa em pull requests para a branch main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest     # Define o sistema operacional do runner
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3  # Clona o repositório
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'   # Distribuição do JDK
+        java-version: '17'        # Versão do Java
+
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2               # Diretório do cache do Maven
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}  # Chave do cache
+        restore-keys: |
+          ${{ runner.os }}-maven-  # Chaves de restauração
+
+    - name: Build with Maven
+      run: mvn clean install -DskipTests  # Compila o projeto sem executar os testes
+
+    - name: Run tests
+      run: mvn test                        # Executa os testes
