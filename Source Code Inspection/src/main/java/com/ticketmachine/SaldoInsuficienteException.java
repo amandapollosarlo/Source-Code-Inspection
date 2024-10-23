@@ -1,5 +1,7 @@
-import com.ticketmachine.PapelMoeda;
-import java.util.NoSuchElementException;
+package com.ticketmachine;
 
 public class SaldoInsuficienteException extends Exception {
+    public SaldoInsuficienteException(String message) {
+        super(message);
+    }
 }

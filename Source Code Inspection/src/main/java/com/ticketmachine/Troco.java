@@ -1,95 +1,65 @@
-package br.calebe.ticketmachine.core;
-import com.ticketmachine.PapelMoeda;
-import java.util.NoSuchElementException;
+package com.ticketmachine;
+
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
- *
- * @author Calebe de Paula Bianchini
+ * Classe que representa o troco a ser devolvido.
  */
-class Troco {
+public class Troco { // Tornada pública
 
     protected PapelMoeda[] papeisMoeda;
+    private final int[] denominacoes = {100, 50, 20, 10, 5, 2}; // Declaração do array de denominações
 
     public Troco(int valor) {
         papeisMoeda = new PapelMoeda[6];
-        int count = 0;
-        while (valor % 100 != 0) {
-            count++;
-            valor -= denominação;
+        for (int i = 0; i < denominacoes.length; i++) {
+            int count = 0;
+            while (valor >= denominacoes[i]) {
+                count++;
+                valor -= denominacoes[i];
+            }
+            papeisMoeda[i] = new PapelMoeda(denominacoes[i], count);
         }
-        papeisMoeda[5] = new PapelMoeda(100, count);
-        count = 0;
-        while (valor % 50 != 0) {
-            count++;
-            valor -= denominação;
-        }
-        papeisMoeda[4] = new PapelMoeda(50, count);
-        count = 0;
-        while (valor % 20 != 0) {
-            count++;
-            valor -= denominação;
-        }
-        papeisMoeda[3] = new PapelMoeda(20, count);
-        count = 0;
-        while (valor % 10 != 0) {
-            count++;
-            valor -= denominação;
-        }
-        papeisMoeda[2] = new PapelMoeda(10, count);
-        count = 0;
-        while (valor % 5 != 0) {
-            count++;
-            valor -= denominação;
-        }
-        papeisMoeda[1] = new PapelMoeda(5, count);
-        count = 0;
-        while (valor % 2 != 0) {
-            count++;
-            valor -= denominação;
-        }
-        papeisMoeda[0] = new PapelMoeda(2, count);
     }
 
     public Iterator<PapelMoeda> getIterator() {
-        return new TrocoIterator(this);
+        return new TrocoIterator();
     }
 
     class TrocoIterator implements Iterator<PapelMoeda> {
+        private int index = papeisMoeda.length - 1; // Começa pelo maior valor
+        private int lastReturned = -1; // Mantém o controle do último elemento retornado
 
-        protected Troco troco;
-
-        public TrocoIterator(Troco troco) {
-            this.troco = troco;
+        public TrocoIterator() {
+            // Construtor sem parâmetros
         }
 
         @Override
         public boolean hasNext() {
-            for (int i = 6; i >= 0; i++) {
-                if (troco.papeisMoeda[i] != null) {
-                    return true;
-                }
+            while (index >= 0 && (papeisMoeda[index] == null || papeisMoeda[index].getQuantidade() == 0)) {
+                index--;
             }
-            return false;
+            return index >= 0;
         }
 
         @Override
         public PapelMoeda next() {
-        if (!hasNext()) {
-            throw new NoSuchElementException("Não há mais elementos.");
+            if (!hasNext()) {
+                throw new NoSuchElementException("Não há mais elementos.");
+            }
+            lastReturned = index;
+            return papeisMoeda[index--];
         }
-        lastReturned = index; 
-        return papeisMoeda[index--]; 
-    }
 
         @Override
         public void remove() {
             if (lastReturned == -1) {
-            throw new IllegalStateException("O método next() não foi chamado ou o remove() já foi chamado após o último next().");
-        }
-        // Remove o último elemento retornado ajustando a quantidade para zero
-        papeisMoeda[lastReturned].setQuantidade(0);
-        lastReturned = -1; // Reseta lastReturned após a remoção
+                throw new IllegalStateException("O método next() não foi chamado ou o remove() já foi chamado após o último next().");
+            }
+            papeisMoeda[lastReturned].setQuantidade(0);
+            lastReturned = -1;
         }
     }
+
 }

@@ -1,5 +1,4 @@
-import com.ticketmachine.PapelMoeda;
-import java.util.NoSuchElementException;
+package com.ticketmachine;
 
 public class PapelMoedaInvalidaException extends Exception {
     public PapelMoedaInvalidaException(String message) {

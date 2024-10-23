@@ -20,4 +20,11 @@ public class PapelMoeda {
     public int getQuantidade() {
         return quantidade;
     }
+
+    public void setQuantidade(int quantidade) {
+        if (quantidade < 0) {
+            throw new IllegalArgumentException("Quantidade não pode ser negativa");
+        }
+        this.quantidade = quantidade;
+    }
 }

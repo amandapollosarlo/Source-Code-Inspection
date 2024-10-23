@@ -1,35 +1,42 @@
-package br.calebe.ticketmachine.core;
-import com.ticketmachine.PapelMoeda;
-import java.util.NoSuchElementException;
-import com.ticketmachine.PapelMoedaInvalidaException;
-import com.ticketmachine.SaldoInsuficienteException;
-import java.util.Iterator;
-
+package com.ticketmachine;
 
 public class TicketMachine {
 
     protected int valor;
     protected int saldo;
     protected int[] papelMoeda = {2, 5, 10, 20, 50, 100};
+    private int precoDoBilhete;
 
-    public TicketMachine(int valor) {
-        this.valor = valor;
+    // Construtor que inicializa o preço do bilhete
+    public TicketMachine(int precoDoBilhete) {
+        this.valor = precoDoBilhete;
+        this.precoDoBilhete = precoDoBilhete;
         this.saldo = 0;
     }
 
-   public void inserir(int valor) throws PapelMoedaInvalidaException {
-    if (valor != 2 && valor != 5 && valor != 10 && valor != 20 && valor != 50 && valor != 100) { // Linha 9
-        throw new IllegalArgumentException("Valor inserido não é uma nota válida.");
+    // Método para inserir dinheiro na máquina
+    public void inserir(int valor) throws PapelMoedaInvalidaException {
+        boolean valido = false;
+        for (int moeda : papelMoeda) {
+            if (moeda == valor) {
+                valido = true;
+                break;
+            }
+        }
+        if (!valido) {
+            throw new PapelMoedaInvalidaException("Valor inserido não é uma nota válida.");
+        }
+        this.saldo += valor;
     }
-    this.saldo += valor;
-}
-    public void emitirBilhete() {
-    if (saldo < precoDoBilhete) { // Linha 16
-        throw new IllegalStateException("Saldo insuficiente para emitir o bilhete.");
+
+    // Método para emitir bilhete
+    public void emitirBilhete() throws SaldoInsuficienteException {
+        if (saldo < precoDoBilhete) {
+            throw new SaldoInsuficienteException("Saldo insuficiente para emitir o bilhete.");
+        }
+        saldo -= precoDoBilhete;
+        System.out.println("Bilhete emitido. Saldo restante: " + saldo);
     }
-    saldo -= precoDoBilhete;
-    System.out.println("Bilhete emitido. Saldo restante: " + saldo);
-}
 
     public int getSaldo() {
         return saldo;
@@ -41,9 +48,9 @@ public class TicketMachine {
 
     public String imprimir() throws SaldoInsuficienteException {
         if (saldo < valor) {
-            throw new SaldoInsuficienteException();
+            throw new SaldoInsuficienteException("Saldo insuficiente para completar a transação.");
         }
-        
+
         String result = "*****************\n";
         result += "*** R$ " + saldo + ",00 ****\n";
         result += "*****************\n";

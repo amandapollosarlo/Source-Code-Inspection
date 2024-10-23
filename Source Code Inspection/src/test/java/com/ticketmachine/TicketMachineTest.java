@@ -1,46 +1,60 @@
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+package com.ticketmachine;
 
-public class TicketMachineTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.ticketmachine.PapelMoedaInvalidaException;
+import com.ticketmachine.SaldoInsuficienteException;
+import com.ticketmachine.TicketMachine;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class TicketMachineTest {
 
     private TicketMachine tm;
 
-    @Before
-    public void setUp() {
-        tm = new TicketMachine(100);  // Preço do bilhete: 100
+    @BeforeEach
+    void setUp() {
+        tm = new TicketMachine(10); // Define o preço do bilhete como 10
     }
 
     @Test
-    public void testInsertValidAmount() {
-        tm.insert(50);  // Insere um valor de 50
-        assertEquals(50, tm.getBalance());  // Verifica se o saldo é 50
+    void testInserirValorValido() throws PapelMoedaInvalidaException {
+        tm.inserir(10);
+        assertEquals(10, tm.getSaldo(), "Saldo deve ser 10 após inserir 10");
     }
 
     @Test
-    public void testInsertInvalidAmount() {
-        try {
-            tm.insert(-10);  // Tenta inserir um valor inválido
-            fail("Deveria ter lançado uma exceção");
-        } catch (IllegalArgumentException e) {
-            assertEquals("Valor inválido", e.getMessage());
-        }
+    void testInserirValorInvalido() {
+        assertThrows(PapelMoedaInvalidaException.class, () -> tm.inserir(3), "Deve lançar PapelMoedaInvalidaException para valor inválido");
     }
 
     @Test
-    public void testPrintTicketWithSufficientFunds() throws Exception {
-        tm.insert(100);  // Insere o valor exato do ticket
-        assertTrue(tm.print());  // Verifica se o bilhete é impresso
+    void testEmitirBilheteComSaldoSuficiente() throws PapelMoedaInvalidaException, SaldoInsuficienteException {
+        tm.inserir(10); // Insere uma nota válida
+        tm.inserir(5);  // Insere outra nota válida, totalizando 15
+        tm.emitirBilhete();
+        assertEquals(5, tm.getSaldo(), "Saldo deve ser 5 após emitir bilhete de 10");
+    }
+
+
+    @Test
+    void testEmitirBilheteComSaldoInsuficiente() throws PapelMoedaInvalidaException {
+        tm.inserir(5); // Insere saldo insuficiente
+        assertThrows(SaldoInsuficienteException.class, () -> tm.emitirBilhete(), "Deve lançar SaldoInsuficienteException quando saldo for insuficiente");
     }
 
     @Test
-    public void testPrintTicketWithInsufficientFunds() {
-        tm.insert(50);  // Insere um valor insuficiente
-        try {
-            tm.print();
-            fail("Deveria ter lançado exceção de saldo insuficiente");
-        } catch (Exception e) {
-            assertEquals("Saldo insuficiente", e.getMessage());
-        }
+    void testImprimirComSaldoSuficiente() throws PapelMoedaInvalidaException, SaldoInsuficienteException {
+        tm.inserir(20); // Insere saldo suficiente
+        String recibo = tm.imprimir();
+        assertNotNull(recibo, "Recibo não deve ser nulo");
+        assertTrue(recibo.contains("R$ 20,00"), "Recibo deve conter o saldo inserido");
+    }
+
+    @Test
+    void testImprimirComSaldoInsuficiente() throws PapelMoedaInvalidaException {
+        tm.inserir(5); // Insere saldo insuficiente
+        assertThrows(SaldoInsuficienteException.class, () -> tm.imprimir(), "Deve lançar SaldoInsuficienteException quando saldo for insuficiente para imprimir");
     }
 }
