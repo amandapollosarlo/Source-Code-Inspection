@@ -1,13 +1,11 @@
 package br.calebe.ticketmachine.core;
-
-import br.calebe.ticketmachine.exception.PapelMoedaInvalidaException;
-import br.calebe.ticketmachine.exception.SaldoInsuficienteException;
+import com.ticketmachine.PapelMoeda;
+import java.util.NoSuchElementException;
+import com.ticketmachine.PapelMoedaInvalidaException;
+import com.ticketmachine.SaldoInsuficienteException;
 import java.util.Iterator;
 
-/**
- *
- * @author Calebe de Paula Bianchini
- */
+
 public class TicketMachine {
 
     protected int valor;

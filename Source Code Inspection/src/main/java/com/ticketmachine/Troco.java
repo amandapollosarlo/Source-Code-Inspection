@@ -1,5 +1,6 @@
 package br.calebe.ticketmachine.core;
-
+import com.ticketmachine.PapelMoeda;
+import java.util.NoSuchElementException;
 import java.util.Iterator;
 
 /**
