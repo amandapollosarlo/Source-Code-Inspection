@@ -8,38 +8,41 @@ class PapelMoedaTest {
 
     private PapelMoeda papelMoedaValida;
     private int valorValido = 10;
+    private int quantidadeValida = 5;
     private int valorInvalido = 3;
+    private int quantidadeInvalida = -1;
 
     @BeforeEach
     void setUp() throws PapelMoedaInvalidaException {
-        papelMoedaValida = new PapelMoeda(valorValido);
+        // Instanciando com valor e quantidade válidos
+        papelMoedaValida = new PapelMoeda(valorValido, quantidadeValida);
     }
 
     @Test
     void testConstrutorComValorValido() {
-        assertNotNull(papelMoedaValida, "PapelMoeda deve ser criado com valor vÃ¡lido");
-        assertEquals(valorValido, papelMoedaValida.getValor(), "Valor da PapelMoeda deve ser igual ao valor vÃ¡lido");
+        assertNotNull(papelMoedaValida, "PapelMoeda deve ser criado com valor válido");
+        assertEquals(valorValido, papelMoedaValida.getValor(), "Valor da PapelMoeda deve ser igual ao valor válido");
+        assertEquals(quantidadeValida, papelMoedaValida.getQuantidade(), "Quantidade da PapelMoeda deve ser igual à quantidade válida");
     }
 
     @Test
     void testConstrutorComValorInvalido() {
+        // Testando a criação de PapelMoeda com valor e quantidade inválidos
         assertThrows(PapelMoedaInvalidaException.class, () -> {
-            new PapelMoeda(valorInvalido);
-        }, "Deve lanÃ§ar PapelMoedaInvalidaException para valor invÃ¡lido");
+            new PapelMoeda(valorInvalido, quantidadeInvalida);
+        }, "Deve lançar PapelMoedaInvalidaException para valor e/ou quantidade inválidos");
     }
 
     @Test
     void testIsValidaParaValorValido() {
-        assertTrue(papelMoedaValida.isValida(), "isValida deve retornar true para valor vÃ¡lido");
+        assertTrue(papelMoedaValida.isValida(), "isValida deve retornar true para valor e quantidade válidos");
     }
 
     @Test
     void testIsValidaParaValorInvalido() {
-        try {
-            PapelMoeda papelMoedaInvalida = new PapelMoeda(valorInvalido);
-            assertFalse(papelMoedaInvalida.isValida(), "isValida deve retornar false para valor invÃ¡lido");
-        } catch (PapelMoedaInvalidaException e) {
-            // ExceÃ§Ã£o esperada para valor invÃ¡lido, nada a fazer aqui
-        }
+        // Tentando criar um PapelMoeda inválido; a exceção será lançada
+        assertThrows(PapelMoedaInvalidaException.class, () -> {
+            new PapelMoeda(valorInvalido, quantidadeInvalida);
+        }, "isValida deve retornar false para valor e/ou quantidade inválida");
     }
 }
