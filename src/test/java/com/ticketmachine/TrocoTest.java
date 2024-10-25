@@ -24,7 +24,8 @@ class TrocoTest {
     @Test
     void testCalcularNotas() {
         Map<Integer, Integer> notas = troco.getNotas();
-        assertNotNull(notas, "Map de notas nï¿½o deve ser nulo");
+        assertNotNull(notas, "Map de notas não deve ser nulo");
+        assertFalse(notas.isEmpty(), "Map de notas não deve estar vazio");
 
         int totalCalculado = 0;
         for (Map.Entry<Integer, Integer> entry : notas.entrySet()) {
@@ -38,13 +39,13 @@ class TrocoTest {
     void testCalcularNotasComValorZero() {
         Troco trocoZero = new Troco(0);
         Map<Integer, Integer> notas = trocoZero.getNotas();
-        assertTrue(notas.isEmpty(), "Map de notas deve estar vazio quando o valor do troco ï¿½ zero");
+        assertTrue(notas.isEmpty(), "Map de notas deve estar vazio quando o valor do troco é zero");
     }
 
     @Test
     void testCalcularNotasComValorNegativo() {
         assertThrows(IllegalArgumentException.class, () -> {
             new Troco(-5);
-        }, "Deve lanï¿½ar IllegalArgumentException para valor de troco negativo");
+        }, "Deve lançar IllegalArgumentException para valor de troco negativo");
     }
 }
