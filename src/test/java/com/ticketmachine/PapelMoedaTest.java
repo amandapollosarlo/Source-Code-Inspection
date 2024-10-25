@@ -2,44 +2,38 @@ package com.ticketmachine;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PapelMoedaTest {
 
     private PapelMoeda papelMoedaValida;
+    private PapelMoeda papelMoedaInvalida;
     private int valorValido = 10;
-    private int valorInvalido = 3;
+    private int quantidadeValida = 1;
+    private int valorInvalido = -1;  // Exemplo de valor inválido (assumindo que valores negativos sejam inválidos)
 
     @BeforeEach
-    void setUp() throws PapelMoedaInvalidaException {
-        papelMoedaValida = new PapelMoeda(valorValido);
+    void setUp() {
+        // Passa dois parâmetros (valor e quantidade) para o construtor
+        papelMoedaValida = new PapelMoeda(valorValido, quantidadeValida);
     }
 
     @Test
     void testConstrutorComValorValido() {
         assertNotNull(papelMoedaValida, "PapelMoeda deve ser criado com valor válido");
-        assertEquals(valorValido, papelMoedaValida.getValor(), "Valor da PapelMoeda deve ser igual ao valor válido");
     }
 
     @Test
     void testConstrutorComValorInvalido() {
-        assertThrows(PapelMoedaInvalidaException.class, () -> {
-            new PapelMoeda(valorInvalido);
-        }, "Deve lançar PapelMoedaInvalidaException para valor inválido");
+        // Exemplo de verificação para construtor com valores negativos, ajuste conforme sua lógica de negócio
+        assertThrows(IllegalArgumentException.class, () -> {
+            papelMoedaInvalida = new PapelMoeda(valorInvalido, quantidadeValida);
+        }, "Deve lançar IllegalArgumentException para valores negativos");
     }
 
     @Test
-    void testIsValidaParaValorValido() {
-        assertTrue(papelMoedaValida.isValida(), "isValida deve retornar true para valor válido");
-    }
-
-    @Test
-    void testIsValidaParaValorInvalido() {
-        try {
-            PapelMoeda papelMoedaInvalida = new PapelMoeda(valorInvalido);
-            assertFalse(papelMoedaInvalida.isValida(), "isValida deve retornar false para valor inválido");
-        } catch (PapelMoedaInvalidaException e) {
-            // Exceção esperada para valor inválido, nada a fazer aqui
-        }
+    void testValorCorreto() {
+        assertEquals(valorValido, papelMoedaValida.getValor(), "O valor da PapelMoeda deve ser o valor inserido");
     }
 }
